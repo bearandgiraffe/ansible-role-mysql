@@ -1,2 +1,45 @@
 ---
-# tasks file for ansible-role-mysql
+- name: Install MySQL packages
+  apt: name={{ item }}
+  with_items:
+    - mysql-server
+    - mysql-client
+    - libmysqlclient-dev
+    - php5-mysql
+    - python-pip
+    - python-dev
+    - python-mysqldb
+
+- name: Install required Python modules
+  pip: name=MySQL-python
+
+- name: Add MySQL user
+  mysql_user: name={{ mysql_db_user }}
+              host={{ item }}
+              password={{ mysql_db_password }} priv=*.*:ALL,GRANT
+              login_user=root
+              login_password=
+  with_items:
+    - '%'
+    - localhost
+
+- name: Enable and start MySQL
+  service: name=mysql enabled=yes state=started
+
+- name: Create MySQL databases
+  mysql_db: name={{ item }} state=present
+  with_items:
+    - "{{ mysql_db_name }}"
+    - "{{ mysql_db_name }}_development"
+    - "{{ mysql_db_name }}_test"
+
+- file: path=/etc/mysql/conf.d state=directory
+  become: yes
+
+- name: Set MySQL number of connections
+  template: src=max_connections.cnf.j2 dest=/etc/mysql/conf.d/max_connections.cnf
+  become: yes
+
+- name: Install MySQL command line client configuration file
+  template: src=my.cnf.j2 dest=/home/vagrant/.my.cnf owner=vagrant group=vagrant
+  become: yes

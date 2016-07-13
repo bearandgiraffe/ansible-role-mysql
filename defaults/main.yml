@@ -1,2 +1,4 @@
 ---
-# defaults file for ansible-role-mysql
+mysql_db_name:      site
+mysql_db_user:      vagrant
+mysql_db_password:  vagrant
