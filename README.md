@@ -14,7 +14,9 @@ Role Variables
 Available variables are listed below, along with default values:
 
 ```yml
-mysql_
+mysql_db_name:      site
+mysql_db_user:      vagrant
+mysql_db_password:  vagrant
 ```
 
 Dependencies
