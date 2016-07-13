@@ -1,7 +1,7 @@
-Role Name
+MySQL
 =========
 
-A role to install mysql.
+Installs MySQL.
 
 Requirements
 ------------
